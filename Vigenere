@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <string.h>
+#include <cs50.h>
+#include <ctype.h>
+
+char caesar(char token, int key);
+
+int main(int argc, string argv[]) {
+
+    // декларация переменной
+    bool keySuccessful = false;
+    string keyword = "";
+    int keylength = 0;
+    string user_text = "";
+    int user_text_length;
+    int key_count = 0;
+
+    do
+    {
+        // проверка кодового слова 
+        if(argc != 2)
+        {
+            printf("You didn't enter the correct number of keywords.\n");
+            return 1;
+        }
+        else if(argv[1])
+        {
+            int length = strlen(argv[1]);
+            for(int i = 0; i < length; i++)
+            {
+                if(!isalpha(argv[1][i]))
+                {
+                    // Вводяться только буквы 
+                    printf("Your input contains illegal characters.\n");
+                    return 1;
+                }
+                else
+                {
+                    // Ввведеное слово принимается как ключ
+                    keySuccessful = true;
+                    keyword = argv[1];
+                }
+            }
+        }
+    } while(!keySuccessful);
+    
+    // Проверка длины ключа и создание массива размером в длину ключа.
+    keylength = strlen(keyword);
+    int keycodes[keylength];
+
+    // Буквы ключа в массиве переводяться в числа int
+    //  A = 0 to Z = 25.
+    for(int i = 0; i < keylength;i++)
+    {
+        keycodes[i] = toupper(keyword[i]) - 65;
+    }
+
+    // Вввод текста для шифрования и подсчет его размера.
+    user_text = GetString();
+    user_text_length = strlen(user_text);
+
+    for (int i = 0; i < user_text_length; i++)
+    {
+        // проверка на ввод букв, если не буква то просто вывод введоного знака
+        if(!isalpha(user_text[i]))
+        {
+            printf("%c", user_text[i]);
+        }
+        // шифрование ключевым словом введеного текста
+        else
+        {
+            printf("%c", caesar(user_text[i], keycodes[key_count]));
+
+            // Увеличение счетчика позиции буквы ключа в массиве ключевого слова.  
+            if(key_count < keylength - 1)
+            {
+                key_count++;
+            }
+            else
+            {
+                key_count = 0;
+            }
+        }
+    }
+
+       printf("\n");
+    return 0;
+}
+
+//    проверка символа большой он или маленький с применением ключа
+
+char caesar(char token, int key)
+{
+    if(islower(token))
+    {
+        return ((((token - 97)+key)%26)+97);
+    }
+    else
+    {
+        return ((((token - 65)  +key)%26)+65);
+    }
+}
